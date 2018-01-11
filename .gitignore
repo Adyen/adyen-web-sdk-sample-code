@@ -1,0 +1,3 @@
+# ignore authentication config file
+
+/config/authentication.ini

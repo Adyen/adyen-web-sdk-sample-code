@@ -1,6 +1,5 @@
 /* Add your custom CSS styling here */
 
-
 /* Page styling */
 .content {
     float: left;
@@ -29,6 +28,11 @@
     margin: 0 auto;
     position: relative;
     width: 60%;
+    font-family: -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans",
+    "Droid Sans", "Helvetica Neue", sans-serif;
+    font-size: 15px;
 }
 
 @media (max-width: 520px) {
