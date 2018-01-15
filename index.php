@@ -19,8 +19,8 @@
  *
  * Author: Adyen
  */
-include('config/timezone.php');
-require_once __DIR__ . '/api/Client.php';
+require_once __DIR__ . '/lib/Client.php';
+date_default_timezone_set("Europe/Amsterdam");
 ?>
 
 <!DOCTYPE html>
@@ -44,13 +44,16 @@ require_once __DIR__ . '/api/Client.php';
         </h3>
         <p>
             <b>merchantAccount</b>= "YOUR MERCHANT ACCOUNT", more information in our <a
-                    href="https://docs.adyen.com/developers/get-started-with-adyen/create-a-test-account">Getting
+                    href="https://docs.adyen.com/developers/get-started-with-adyen/create-a-test-account"
+                    target="_blank">Getting
                 started guide</a>.<br/>
-            <b>checkoutAPIkey</b>= "YOUR CHECKOUT API KEY".
+            <b>checkoutAPIkey</b>= "YOUR CHECKOUT API KEY".<a
+                    href="https://docs.adyen.com/developers/user-management/how-to-get-the-checkout-api-key"
+                    target="_blank">Checkout API key</a>.<br/>
         </p>
         <p>
             For a full reference of the documentation, visit: <a
-                    href="https://docs.adyen.com/developers/checkout/web-sdk">Checkout Web SDK</a>
+                    href="https://docs.adyen.com/developers/checkout/web-sdk" target="_blank">Checkout Web SDK</a>
         </p>
     </div>
 
@@ -62,7 +65,8 @@ require_once __DIR__ . '/api/Client.php';
 </div>
 <?php
 $client = new Client();
-$setupData = json_encode($client->requestPaymentData());
+$setupData = json_encode($client->setup());
+
 
 ?>
 <script type="text/javascript">
@@ -74,8 +78,7 @@ $setupData = json_encode($client->requestPaymentData());
             // `paymentData` is the result of the payment. Includes the `payload` variable,
             // which you should submit to the server for the Checkout API /verify call.
             $.ajax({
-                url: 'api/Verify.php',
-                dataType: 'json',
+                url: 'verify.php',
                 data: {payloadData: paymentData},
                 method: 'POST',// jQuery > 1.9
                 type: 'POST', //jQuery < 1.9

@@ -18,14 +18,11 @@
  * Copyright (c) 2017 Adyen BV (https://www.adyen.com/)
  *
  */
-require_once __DIR__ . '/../payment/order.php';
-require_once __DIR__ . '/../config/server.php';
+require_once __DIR__ . '/Order.php';
+require_once __DIR__ . '/Config.php';
 
 class Client
 {
-    public function __construct()
-    {
-    }
 
     private function _getAuthentication()
     {
@@ -44,14 +41,13 @@ class Client
         return $authentication;
     }
 
-    /** Set up the cURL call to  adyen */
-    public function requestPaymentData()
+    public function setup()
     {
         $order = new Order();
-        $server = new Server();
         $authentication = $this->_getAuthentication();
+        $url = Config::getSetupUrl();
         $request = array(
-            /** All order specific settings can be found in payment/order.php */
+            /** All order specific settings can be found in payment/Order.php */
 
             'amount' => $order->getAmount(),
             'channel' => $order->getChannel(),
@@ -61,39 +57,53 @@ class Client
             'shopperLocale' => $order->getShopperLocale(),
             'reference' => $order->getReference(),
 
-            /** All server specific settings can be found in config/server.php */
+            /** All server specific settings can be found in config/Config.php */
 
-            'origin' => $server->getOrigin(),
-            'shopperIP' => $server->getShopperIP(),
-            'returnUrl' => $server->getReturnUrl(),
+            'origin' => Config::getOrigin(),
+            'shopperIP' => Config::getShopperIP(),
+            'returnUrl' => Config::getReturnUrl(),
 
             /** All merchant/authentication specific settings can be found in config/authentication.php */
 
             'merchantAccount' => $authentication['merchantAccount']
         );
+        $data = json_encode($request);
+        return $this->doPostRequest($url, $data);
 
-        $setupString = json_encode($request);
+    }
+
+    public function verify($data)
+    {
+        $url = Config::getVerifyUrl();
+        return $this->doPostRequest($url, $data);
+    }
+
+    /** Set up the cURL call to  adyen */
+    private function doPostRequest($url, $data)
+    {
+        $authentication = $this->_getAuthentication();
+
         //  Initiate curl
         $curlAPICall = curl_init();
 
         // Set to POST
         curl_setopt($curlAPICall, CURLOPT_CUSTOMREQUEST, "POST");
 
-        // Add JSON message
-        curl_setopt($curlAPICall, CURLOPT_POSTFIELDS, $setupString);
-
         // Will return the response, if false it print the response
         curl_setopt($curlAPICall, CURLOPT_RETURNTRANSFER, true);
 
+        // Add JSON message
+        curl_setopt($curlAPICall, CURLOPT_POSTFIELDS, $data);
+
         // Set the url
-        curl_setopt($curlAPICall, CURLOPT_URL, $server->getSetupUrl());
+        curl_setopt($curlAPICall, CURLOPT_URL, $url);
 
         // Api key
         curl_setopt($curlAPICall, CURLOPT_HTTPHEADER,
             array(
                 "X-Api-Key: " . $authentication['checkoutAPIkey'],
                 "Content-Type: application/json",
-                "Content-Length: " . strlen($setupString)
+                "Content-Length: " . strlen($data)
             )
         );
 
