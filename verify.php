@@ -1,4 +1,5 @@
 <?php
+
 /**
  *                       ######
  *                       ######
@@ -18,6 +19,10 @@
  * Copyright (c) 2017 Adyen BV (https://www.adyen.com/)
  *
  */
+require_once __DIR__ . '/lib/Client.php';
 
-/** Set the timezone */
-date_default_timezone_set("Europe/Amsterdam");
+header("Content-type: application/json");
+
+$client = new Client();
+$data = json_encode($_POST['payloadData']);
+echo $client->verify($data);

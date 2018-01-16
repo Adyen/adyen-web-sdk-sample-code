@@ -24,11 +24,6 @@
  * For more information, refer to the checkout API documentation: https://docs.adyen.com/developers/checkout/api-reference-checkout */
 class Order
 {
-    public function __construct()
-    {
-
-    }
-
     /** @int value - Put the value into minor units 120 = 1.20 (for USD), for decimal information per currency see: https://docs.adyen.com/developers/currency-codes */
     public $value = 120;
 
@@ -68,7 +63,7 @@ class Order
     }
 
     /** @var $countryCode - The countryCode influences the returned payment methods */
-    public $countryCode = 'NL';
+    public $countryCode = 'FR';
 
     public function getCountryCode()
     {
