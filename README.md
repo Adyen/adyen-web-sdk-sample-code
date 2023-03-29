@@ -33,3 +33,9 @@ For the complete integration guide, refer to the Adyen documentation:
 ## License
 
 This repository is open source and available under the MIT license. For more information, see the LICENSE file.
+
+## This is a sample heading
+
+This is me writing a sentence. 
+
+Double space for new paragraph. 
